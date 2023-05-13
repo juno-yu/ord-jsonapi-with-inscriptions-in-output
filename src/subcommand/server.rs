@@ -487,6 +487,11 @@ impl Server {
 
     Ok(if accept_json.0 {
       axum::Json(serde_json::json!({
+        "inscriptions": inscriptions.iter().map(|inscription| {
+          serde_json::json!({
+            "href": format!("/inscription/{}", inscription),
+          })
+        }).collect::<Vec<_>>(),    
         "value": output.value,
         "script_pubkey": output.script_pubkey.asm(),
         "address": page_config.chain.address_from_script(&output.script_pubkey).unwrap(),
